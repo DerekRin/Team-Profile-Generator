@@ -3,8 +3,6 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 
-//Check Pro-Read-Gen for file generation
-
 var companyArray = [];
 
 questions();
@@ -168,5 +166,3 @@ function getIntern() {
       console.log(intern);
     });
 }
-
-//Create function, add the logic for answers, recall the logic, this function will invoke the function again
