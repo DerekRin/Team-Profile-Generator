@@ -2,7 +2,8 @@ var inquirer = require("inquirer");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
-
+const { createHTML } = require("./Page-Template");
+const Employee = require("./lib/Employee");
 var companyArray = [];
 
 questions();
@@ -70,28 +71,11 @@ function company() {
         getEngineer();
       } else if (answers.roleselect === "Intern") {
         getIntern();
-      } else if (answers.roleselect === "Finish") console.log(companyArray);
+      } else if (answers.roleselect === "Finish") {
+        createHTML(companyArray);
+      }
     });
 }
-
-// .then(() => {
-
-// });
-// .then(() => {
-//   inquirer
-//     .prompt([
-//       {
-//         name: "typeI",
-//         message: "Would you like to add an Intern?",
-//         type: "confirm",
-//       },
-//     ])
-//     .then((answers) => {
-//       if (answers.typeI === true) {
-//         getIntern();
-//       }
-//     });
-// });
 
 function getEngineer() {
   inquirer

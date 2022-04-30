@@ -1,8 +1,6 @@
-module.exports = (templateData) => {
-  const { projects, about, ...header } = templateData;
+const fs = require("fs");
 
-  return `
-<!DOCTYPE html>
+let topText = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -24,54 +22,81 @@ module.exports = (templateData) => {
         </div>
       </header>
 
-<div class="container m-4 p-4">
+<div id="accordion" class="container m-4 p-4">`;
 
-    <div>
-      <div class="card text-white bg-primary mb-3" style="width: 18rem">
-        <div class="card-body">
-          <h5 class="card-title">Manager</h5>
-          <p class="card-text">
-            Manager: ${answers.Mname}
-          </p>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">ID: ${answers.Mid} </li>
-          <li class="list-group-item"><a href=>Email: ${answers.Memail} </li></a>
-          <li class="list-group-item">Office Number: ${answers.officenumber} </li>
-        </ul>
-    </div>
-
-    <div>
-        <div class="card text-white bg-primary mb-3" style="width: 18rem">
-          <div class="card-body">
-            <h5 class="card-title">Engineer</h5>
-            <p class="card-text">
-                Engineer: ${answers.nameE}
-            </p>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">ID: ${answers.idE} </li>
-            <li class="list-group-item"><a href="mailto:${answers.emailE}">Email: </li></a>
-            <li class="list-group-item"><a href="https://github.com/${answers.github}">Github: </li></a>
-          </ul>
-      </div>
-
-      <div>
-        <div class="card text-white bg-primary mb-3" style="width: 18rem">
-          <div class="card-body">
-            <h5 class="card-title">Intern</h5>
-            <p class="card-text">
-                Intern: ${answers.Iname}
-            </p>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">ID: ${answers.Iid} </li>
-            <li class="list-group-item"><a href="mailto:${answers.Iemail}">Email: </li></a>
-            <li class="list-group-item">School: ${answers.school} </li>
-          </ul>
-      </div>
-</div>
-  </body>
+let bottomText = `</div>
+</body>
 </html>
 `;
-};
+
+function generateCards(companyArray) {
+  let content = "";
+
+  companyArray.forEach(function (employees) {
+    const role = employees.getRole();
+
+    if (role === "Manager") {
+      content += `
+    <div>
+        <div class="card text-white bg-primary mb-3" style="width: 18rem">
+          <div class="card-body">
+            <h5 class="card-title">Manager</h5>
+            <p class="card-text">
+              Manager: ${employees.getName()}
+            </p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">ID: ${employees.getId()} </li>
+            <li class="list-group-item"><a href=>Email: ${employees.getEmail()} </li></a>
+            <li class="list-group-item">Office Number: ${
+              employees.officenumber
+            } </li>
+          </ul>
+      </div>`;
+    } else if (role === "Engineer") {
+      content += `
+        <div>
+            <div class="card text-white bg-primary mb-3" style="width: 18rem">
+              <div class="card-body">
+                <h5 class="card-title">Engineer</h5>
+                <p class="card-text">
+                    Engineer: ${employees.getName()}
+                </p>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">ID: ${employees.getId()} </li>
+                <li class="list-group-item"><a href=mailto${employees.getEmail()}.com:>Email: ${employees.getEmail()} </li></a>
+                <li class="list-group-item"><a href="https://github.com/${
+                  employees.github
+                }">Github: ${employees.github} </li></a>
+              </ul>
+          </div>`;
+    } else if (role === "Intern") {
+      content += `
+          <div>
+          <div class="card text-white bg-primary mb-3" style="width: 18rem">
+            <div class="card-body">
+              <h5 class="card-title">Intern</h5>
+              <p class="card-text">
+                  Intern: ${employees.getName()}
+              </p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">ID: ${employees.getId()} </li>
+              <li class="list-group-item"><a href=mailto${employees.getEmail()}.com:>Email: ${employees.getEmail()} </li></a>
+              <li class="list-group-item">School: ${employees.school} </li>
+            </ul>
+        </div>
+    `;
+    }
+  });
+  return content;
+}
+
+function createHTML(companyArray) {
+  const fullPage = topText + generateCards(companyArray) + bottomText;
+
+  fs.writeFile("./dist/index.html", fullPage, (er) => console.log(er));
+}
+
+module.exports = { createHTML };
